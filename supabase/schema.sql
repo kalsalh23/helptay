@@ -17,6 +17,16 @@ create unique index if not exists fuel_registrations_family_book_no_key
 alter table fuel_registrations enable row level security;
 
 -- السماح بالإدخال للمستخدم المجهول (anon)
-create policy "allow anon insert"
-on fuel_registrations for insert
-to anon with check (true);
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'fuel_registrations'
+      and policyname = 'allow anon insert'
+  ) then
+    create policy "allow anon insert"
+    on fuel_registrations for insert
+    to anon with check (true);
+  end if;
+end $$;

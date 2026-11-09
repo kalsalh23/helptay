@@ -1,132 +1,127 @@
-@keyframes dashoffset {
-  from {
-    stroke-dashoffset: 163.36;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
+@keyframes splashProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+@keyframes splashFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
 }
 
 .splash-container {
   position: fixed;
   inset: 0;
-  background: #faf9f6;
+  background: #ffffff;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   direction: rtl;
   font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
-.splash-content {
+.splash-container.splash-hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-center {
+  flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  width: 100%;
   padding: 24px;
-  text-align: center;
 }
 
-.splash-logo {
-  animation: float 4s ease-in-out infinite;
+.splash-logo-img {
+  max-width: min(320px, 72vw);
+  max-height: 42vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
-.splash-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #2d4a3e;
-  margin: 0;
-}
-
-.splash-subtitle {
-  font-size: 15px;
-  color: #7a8a7f;
-  margin: 0;
-}
-
-.splash-desc {
-  font-size: 14px;
-  color: #5a6b5f;
-  margin: 0;
-  max-width: 340px;
-  line-height: 1.7;
-}
-
-.highlight {
-  color: #2d4a3e;
-  font-weight: 700;
-}
-
-.splash-loader-wrap {
-  margin-top: 8px;
-}
-
-.splash-footer {
+.splash-bottom {
+  width: 100%;
+  padding: 0 24px 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  margin-top: 4px;
+  gap: 12px;
+}
+
+.splash-progress {
+  width: min(420px, 86vw);
+  height: 4px;
+  background: #e6e6e6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.splash-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: #1f2937;
+  border-radius: 999px;
+  transform-origin: right center;
+  animation: splashProgress 5s linear forwards;
+}
+
+.splash-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+  letter-spacing: 0.01em;
 }
 
 .splash-author {
-  font-size: 13px;
-  font-weight: 700;
-  color: #2d4a3e;
-  margin: 0;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.splash-sep {
+  color: #9ca3af;
 }
 
 .splash-phone {
-  font-size: 12px;
-  color: #7a8a7f;
-  margin: 0;
   direction: ltr;
+  unicode-bidi: isolate;
+  color: #4b5563;
 }
 
 .splash-skip {
-  margin-top: 12px;
   border: none;
-  background: none;
-  color: #b0b0b0;
-  font-size: 14px;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 13px;
   cursor: pointer;
   font-family: inherit;
+  padding: 4px 8px;
   transition: color 0.2s;
 }
 
 .splash-skip:hover {
-  color: #2d4a3e;
+  color: #374151;
 }
 
 @media (max-width: 600px) {
-  .splash-logo {
-    width: 100px;
-    height: 100px;
+  .splash-logo-img {
+    max-width: min(260px, 78vw);
+    max-height: 38vh;
   }
-  .splash-logo svg {
-    width: 100px;
-    height: 100px;
+  .splash-bottom {
+    padding: 0 16px 22px;
   }
-  .splash-loader-wrap svg {
-    width: 54px;
-    height: 54px;
-  }
-  .splash-title {
-    font-size: 22px;
-  }
-  .splash-desc {
-    font-size: 13px;
-    max-width: 280px;
+  .splash-credit {
+    font-size: 12px;
+    gap: 6px;
   }
 }

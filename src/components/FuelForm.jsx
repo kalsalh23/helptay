@@ -220,6 +220,11 @@ export default function FuelForm() {
           <button type="submit" className="submit-btn" disabled={loading}>
             {loading ? 'جاري الإرسال...' : 'إرسال الطلب'}
           </button>
+
+          <div className="support-box">
+            <span className="support-text">الدعم — في حال لم تعرف كيفية التسجيل:</span>
+            <a className="support-phone" href="tel:0952639157" dir="ltr">0952639157</a>
+          </div>
         </form>
 
         <div className="form-footer">

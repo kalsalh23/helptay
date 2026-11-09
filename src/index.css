@@ -134,6 +134,37 @@ body {
   cursor: not-allowed;
 }
 
+.support-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid #e6ece8;
+  border-radius: 10px;
+  background: #f7f9f7;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.support-text {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.support-phone {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d4a3e;
+  text-decoration: none;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.support-phone:hover {
+  text-decoration: underline;
+}
+
 .error-message {
   margin-bottom: 14px;
   padding: 10px 12px;

@@ -25,17 +25,12 @@ export default function Splash({ onDone }) {
       </div>
 
       <div className="splash-bottom">
-        <div className="splash-progress" aria-hidden="true">
-          <div className="splash-progress-bar" />
-        </div>
+        <div className="splash-loader" aria-hidden="true" />
         <div className="splash-credit">
           <span className="splash-author">قصي مهند الصالح</span>
           <span className="splash-sep">•</span>
           <span className="splash-phone" dir="ltr">0952639157</span>
         </div>
-        <button type="button" className="splash-skip" onClick={hideSplash}>
-          تخطي
-        </button>
       </div>
     </div>
   )

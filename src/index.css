@@ -1,0 +1,261 @@
+/* الأنماط العامة */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1f2937;
+}
+
+/* صفحة النموذج */
+.page-wrap {
+  min-height: 100vh;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 750px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.form-header {
+  background: #2d4a3e;
+  color: #ffffff;
+  padding: 22px 24px;
+  text-align: center;
+}
+
+.form-header h1 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-block;
+  background: #c9a86a;
+  color: #1f2937;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-body {
+  padding: 24px;
+}
+
+.section {
+  margin-bottom: 22px;
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d4a3e;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e6ece8;
+}
+
+.row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.row.two-cols .field {
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #dcd9d2;
+  border-radius: 10px;
+  background: #fafaf8;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: #2d4a3e;
+  box-shadow: 0 0 0 3px rgba(45, 74, 62, 0.1);
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 28px 16px;
+  border: 2px dashed #c5cfc8;
+  border-radius: 12px;
+  background: #f7f9f7;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.file-upload:hover {
+  border-color: #2d4a3e;
+  background: #f2f6f3;
+}
+
+.file-upload-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d4a3e;
+}
+
+.file-upload-hint {
+  font-size: 12px;
+  color: #7a8a7f;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid #dcd9d2;
+  border-radius: 12px;
+  background: #fafaf8;
+}
+
+.file-preview img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #374151;
+  word-break: break-all;
+}
+
+.file-remove {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border: 1px solid #ef4444;
+  background: #ffffff;
+  color: #ef4444;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+}
+
+.file-remove:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #2d4a3e;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #3d6353;
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  border: 1px solid #fecaca;
+}
+
+.success-message {
+  margin: 24px;
+  padding: 18px 16px;
+  border-radius: 12px;
+  background: #ecfdf5;
+  color: #065f46;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid #a7f3d0;
+}
+
+.form-footer {
+  padding: 14px 24px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* تجاوب مع الشاشات الصغيرة */
+@media (max-width: 600px) {
+  .page-wrap {
+    padding: 12px 10px;
+  }
+  .form-body {
+    padding: 20px;
+  }
+  .row.two-cols {
+    flex-direction: column;
+  }
+  .form-header h1 {
+    font-size: 19px;
+  }
+}

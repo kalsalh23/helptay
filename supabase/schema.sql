@@ -11,6 +11,10 @@ create table if not exists fuel_registrations (
   created_at timestamptz default now()
 );
 
+-- منع تكرار رقم دفتر العائلة
+create unique index if not exists fuel_registrations_family_book_no_key
+  on fuel_registrations (family_book_no);
+
 alter table fuel_registrations enable row level security;
 
 -- السماح بالإدخال للمستخدم المجهول (anon)

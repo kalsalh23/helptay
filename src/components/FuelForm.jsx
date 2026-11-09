@@ -9,6 +9,45 @@ const NEIGHBORHOODS = [
   'وسط المدينة',
 ]
 
+// ضغط الصورة قبل الرفع لتقليل استهلاك التخزين (مهم للخطة المجانية)
+async function compressImage(file, maxSize = 1280, quality = 0.72) {
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+
+  const img = await new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = reject
+    image.src = dataUrl
+  })
+
+  let { width, height } = img
+  if (width > maxSize || height > maxSize) {
+    if (width > height) {
+      height = Math.round((height * maxSize) / width)
+      width = maxSize
+    } else {
+      width = Math.round((width * maxSize) / height)
+      height = maxSize
+    }
+  }
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const ctx = canvas.getContext('2d')
+  ctx.drawImage(img, 0, 0, width, height)
+
+  const blob = await new Promise((resolve) =>
+    canvas.toBlob(resolve, 'image/jpeg', quality)
+  )
+  return blob || file
+}
+
 export default function FuelForm() {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -26,6 +65,18 @@ export default function FuelForm() {
 
   function handleChange(e) {
     const { name, value } = e.target
+    // السماح بالأرقام فقط للحقول الرقمية
+    if (name === 'nationalId' || name === 'familyBookNo') {
+      const digits = value.replace(/\D/g, '')
+      const max = name === 'nationalId' ? 11 : 9
+      setFormData((prev) => ({ ...prev, [name]: digits.slice(0, max) }))
+      return
+    }
+    if (name === 'phone') {
+      const digits = value.replace(/\D/g, '')
+      setFormData((prev) => ({ ...prev, [name]: digits.slice(0, 10) }))
+      return
+    }
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -37,8 +88,8 @@ export default function FuelForm() {
       setError('يرجى اختيار ملف صورة صالح.')
       return
     }
-    if (selected.size > 5 * 1024 * 1024) {
-      setError('حجم الصورة يجب ألا يتجاوز 5 ميغابايت.')
+    if (selected.size > 10 * 1024 * 1024) {
+      setError('حجم الصورة كبير جدًا. يرجى اختيار صورة أصغر.')
       return
     }
     setFile(selected)
@@ -55,8 +106,12 @@ export default function FuelForm() {
     setError('')
 
     // التحقق من الحقول
-    if (!/^\d{6,12}$/.test(formData.nationalId)) {
-      setError('الرقم الوطني يجب أن يكون بين 6 و 12 رقمًا.')
+    if (!/^\d{11}$/.test(formData.nationalId)) {
+      setError('الرقم الوطني يجب أن يتكون من 11 رقمًا.')
+      return
+    }
+    if (!/^\d{9}$/.test(formData.familyBookNo)) {
+      setError('رقم دفتر العائلة يجب أن يتكون من 9 أرقام.')
       return
     }
     if (!/^09\d{8}$/.test(formData.phone)) {
@@ -70,13 +125,13 @@ export default function FuelForm() {
 
     setLoading(true)
     try {
-      // رفع الصورة إلى Supabase Storage
-      const ext = file.name.split('.').pop() || 'jpg'
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
+      // ضغط الصورة قبل الرفع
+      const compressed = await compressImage(file)
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`
 
       const { error: uploadError } = await supabase.storage
         .from('family-books')
-        .upload(fileName, file)
+        .upload(fileName, compressed, { contentType: 'image/jpeg' })
 
       if (uploadError) throw uploadError
 
@@ -95,7 +150,14 @@ export default function FuelForm() {
           },
         ])
 
-      if (insertError) throw insertError
+      if (insertError) {
+        // تنظيف الصورة المرفوعة عند فشل الإدخال
+        await supabase.storage.from('family-books').remove([fileName])
+        if (insertError.code === '23505') {
+          throw new Error('رقم دفتر العائلة مسجل مسبقًا.')
+        }
+        throw insertError
+      }
 
       setSuccess(true)
     } catch (err) {
@@ -163,8 +225,12 @@ export default function FuelForm() {
                   id="nationalId"
                   name="nationalId"
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
                   required
-                  maxLength={12}
+                  maxLength={11}
+                  placeholder="11 رقمًا"
                   value={formData.nationalId}
                   onChange={handleChange}
                 />
@@ -175,7 +241,12 @@ export default function FuelForm() {
                   id="familyBookNo"
                   name="familyBookNo"
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
                   required
+                  maxLength={9}
+                  placeholder="9 أرقام"
                   value={formData.familyBookNo}
                   onChange={handleChange}
                 />
@@ -188,7 +259,10 @@ export default function FuelForm() {
                   id="phone"
                   name="phone"
                   type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   required
+                  maxLength={10}
                   placeholder="09xxxxxxxx"
                   value={formData.phone}
                   onChange={handleChange}
@@ -234,7 +308,7 @@ export default function FuelForm() {
                       hidden
                     />
                     <span className="file-upload-text">اضغط هنا لرفع صورة دفتر العائلة</span>
-                    <span className="file-upload-hint">الصيغ المدعومة: صور فقط (بحد أقصى 5MB)</span>
+                    <span className="file-upload-hint">سيتم ضغط الصورة تلقائيًا لتسريع الرفع</span>
                   </label>
                 ) : (
                   <div className="file-preview">
